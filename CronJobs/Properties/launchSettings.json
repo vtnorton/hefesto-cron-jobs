@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "CronJobs": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7204"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 30411,
+      "useSSL": false
+    }
+  }
+}

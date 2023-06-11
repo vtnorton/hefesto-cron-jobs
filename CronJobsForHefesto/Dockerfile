@@ -10,14 +10,14 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 COPY --from=runtime6.0 /usr/share/dotnet/host /usr/share/dotnet/host
 COPY --from=runtime6.0 /usr/share/dotnet/shared /usr/share/dotnet/shared
 WORKDIR /src
-COPY ["CronJobs/CronJobs.csproj", "CronJobs/"]
-RUN dotnet restore "CronJobs/CronJobs.csproj"
+COPY ["CronJobsForHefesto/CronJobsForHefesto.csproj", "CronJobsForHefesto/"]
+RUN dotnet restore "CronJobsForHefesto/CronJobsForHefesto.csproj"
 COPY . .
-WORKDIR "/src/CronJobs"
-RUN dotnet build "CronJobs.csproj" -c Release -o /app/build
+WORKDIR "/src/CronJobsForHefesto"
+RUN dotnet build "CronJobsForHefesto.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "CronJobs.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "CronJobsForHefesto.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /home/site/wwwroot

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CronJobs", "CronJobs\CronJobs.csproj", "{1BF43126-980E-4325-BC7D-6FA058801B49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CronJobsForHefesto", "CronJobsForHefesto\CronJobsForHefesto.csproj", "{CE1B1458-BF42-473A-9FC4-A77CDEFC5A15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1BF43126-980E-4325-BC7D-6FA058801B49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BF43126-980E-4325-BC7D-6FA058801B49}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BF43126-980E-4325-BC7D-6FA058801B49}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BF43126-980E-4325-BC7D-6FA058801B49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE1B1458-BF42-473A-9FC4-A77CDEFC5A15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE1B1458-BF42-473A-9FC4-A77CDEFC5A15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE1B1458-BF42-473A-9FC4-A77CDEFC5A15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE1B1458-BF42-473A-9FC4-A77CDEFC5A15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

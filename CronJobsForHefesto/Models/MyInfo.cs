@@ -1,4 +1,4 @@
-﻿namespace CronJobs.Models
+﻿namespace CronJobsForHefesto.Models
 {
     public class MyInfo
     {

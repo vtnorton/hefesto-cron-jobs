@@ -1,13 +1,13 @@
 {
   "profiles": {
-    "CronJobs": {
+    "CronJobsForHefesto": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7204"
+      "commandLineArgs": "--port 7260"
     },
     "Docker": {
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "httpPort": 30411,
+      "httpPort": 31993,
       "useSSL": false
     }
   }

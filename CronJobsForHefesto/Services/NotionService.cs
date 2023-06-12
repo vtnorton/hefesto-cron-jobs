@@ -58,24 +58,30 @@ namespace CronJobsForHefesto.Services
             foreach (var item in posts.Results)
             {
                 if (item.Cover != null)
-                    pagesCovers.Add(new PageCover()
-                    {
-                        PageId = item.Id,
-                        PageLink = item.Url,
-                        PhotoURL = GetCoverURL(item)
-                    }) ;
-
-            }
-
-            foreach (var item in changelogs.Results)
-            {
-                if (item.Cover != null)
+                {
                     pagesCovers.Add(new PageCover()
                     {
                         PageId = item.Id,
                         PageLink = item.Url,
                         PhotoURL = GetCoverURL(item)
                     });
+                    Console.WriteLine("Imported Notion page: " + item.Id);
+                }
+
+            }
+
+            foreach (var item in changelogs.Results)
+            {
+                if (item.Cover != null)
+                {
+                    pagesCovers.Add(new PageCover()
+                    {
+                        PageId = item.Id,
+                        PageLink = item.Url,
+                        PhotoURL = GetCoverURL(item)
+                    });
+                    Console.WriteLine("Imported Notion page: " + item.Id);
+                }
 
             }
 

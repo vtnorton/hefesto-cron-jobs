@@ -9,8 +9,34 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  enviroment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Tag Replacer Connection String
+        uses: AlexRogalskiy/github-action-tag-replacer@v2.0.1
+        with:
+          sourceData: ./CronJobsForHefesto/local.settings.json
+          placeholder: '<!--connectionstring:replace-->'
+          replacement: secrets.CONNECTION_STRING
+      - name: Tag Replacer Notion Auth
+        uses: AlexRogalskiy/github-action-tag-replacer@v2.0.1
+        with:
+          sourceData: ./CronJobsForHefesto/local.settings.json
+          placeholder: '<!--connectionstring:replace-->'
+          replacement: secrets.NOTION_AUTH_TOKEN
+      - name: Tag Replacer Notion DB
+        uses: AlexRogalskiy/github-action-tag-replacer@v2.0.1
+        with:
+          sourceData: ./CronJobsForHefesto/local.settings.json
+          placeholder: '<!--connectionstring:replace-->'
+          replacement: secrets.NOTION_DATABASE_ID    
+
+    
   build:
     runs-on: ubuntu-latest
+    needs: enviroment
     permissions:
       contents: read
       packages: write
@@ -34,7 +60,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: .
+          context: ./CronJobsForHefeesto/
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

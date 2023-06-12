@@ -7,7 +7,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 COPY --from=runtime6.0 /usr/share/dotnet/host /usr/share/dotnet/host
 COPY --from=runtime6.0 /usr/share/dotnet/shared /usr/share/dotnet/shared
 WORKDIR /src
-COPY ["CronJobsForHefesto.csproj", "CronJobsForHefesto/"]
+COPY ["./CronJobsForHefesto/CronJobsForHefesto.csproj", "CronJobsForHefesto/"]
 RUN dotnet restore "CronJobsForHefesto/CronJobsForHefesto.csproj"
 COPY . .
 WORKDIR "/src/CronJobsForHefesto"

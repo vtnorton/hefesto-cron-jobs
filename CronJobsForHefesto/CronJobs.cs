@@ -25,14 +25,14 @@ namespace CronJobsForHefesto
         //}
 
         [Function("UploadPhotoFromNotionToStorageAccount")]
-        public void UploadPhotoFromNotionToStorageAccount([TimerTrigger("0 */5 * * * *", RunOnStartup = true)] MyInfo myTimer)
+        public async Task UploadPhotoFromNotionToStorageAccountAsync([TimerTrigger("0 15 2 1-31 * *", RunOnStartup = true)] MyInfo myTimer)
         {
             _logger.LogInformation("-----------------------------------------------------");
             _logger.LogInformation($"UploadPhotoFromNotionToStorageAccount function execution started at: {DateTime.Now}");
             _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
 
             var service = new NotionToStorageAccount(_clientFactory);
-            service.ExcuteAction();
+            await service.ExcuteActionAsync();
 
             _logger.LogInformation($"UploadPhotoFromNotionToStorageAccount function executed at: {DateTime.Now}");
         }

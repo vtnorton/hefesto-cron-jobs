@@ -1,0 +1,10 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "CONNECTION_STRING": "REPLACE HERE",
+    "NOTION_AUTH_TOKEN": "REPLACE HERE",
+    "NOTION_DATABASE_ID": "REPLACE HERE"
+  }
+}

@@ -45,13 +45,32 @@ namespace CronJobsForHefesto.Services
             return new PageCover()
             {
                 PageId = originalCover.PageId,
-                IsAlreadyStoraged = true
+                PhotoURL = blobClient.Uri.ToString(),
             };
         }
 
         private string GetExtentionFromFilePath(string filePath)
         {
-            return Path.GetExtension(filePath).ToLower();
+            if (filePath.Contains("X-Amz-Algorithm"))
+            {
+                var index = filePath.IndexOf("X-Amz-Algorithm");
+                if (filePath.Contains("webp?X-Amz-Algorithm"))
+                    return ".webp";
+                return filePath.Substring(index - 5, 4);
+            }
+
+            if (filePath.Contains("?fit="))
+            {
+                var index = filePath.IndexOf("?fit=");
+                return filePath.Substring(index - 4, 4);
+            }
+
+            if(filePath.EndsWith("jpg") || filePath.EndsWith("png"))
+            {
+                return filePath.Substring(filePath.Length - 4, 4);
+            }
+
+            return ".jpg";
         }
 
         private async Task<byte[]> GetImageFromPathAsync(string path)

@@ -1,12 +1,22 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
-    .ConfigureServices(services =>
+namespace CronJobsForHefesto
+{
+    public class Program
     {
-        services.AddHttpClient();
-    })
-    .Build();
+        public static void Main(string[] args)
+        {
+            var host = new HostBuilder()
+                .ConfigureFunctionsWorkerDefaults()
+                .ConfigureServices(services =>
+                {
+                    services.AddHttpClient();
+                })
+                .Build();
 
-host.Run();
+            host.Run();
+        }
+    }
+}
+

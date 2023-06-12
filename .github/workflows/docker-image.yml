@@ -7,9 +7,9 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  CONNECTION_STRING: secrets.CONNECTION_STRING
-  NOTION_AUTH_TOKEN: secrets.NOTION_AUTH_TOKEN
-  NOTION_DATABASE_ID: secrets.NOTION_DATABASE_ID
+  CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
+  NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
+  NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
 
 jobs:
   enviroment:

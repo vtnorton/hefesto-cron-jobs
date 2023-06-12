@@ -7,6 +7,9 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  CONNECTION_STRING: secrets.CONNECTION_STRING
+  NOTION_AUTH_TOKEN: secrets.NOTION_AUTH_TOKEN
+  NOTION_DATABASE_ID: secrets.NOTION_DATABASE_ID
 
 jobs:
   enviroment:
@@ -16,24 +19,11 @@ jobs:
       
       - name: Rename settings
         run: mv ./CronJobsForHefesto/settings.json ./CronJobsForHefesto/local.settings.json
-      - name: Tag Replacer Connection String
-        uses: AlexRogalskiy/github-action-tag-replacer@v2.0.1
+      - name: replace-env
+        uses: nightstory/replace-env@v1
         with:
-          sourceData: ./CronJobsForHefesto/local.settings.json
-          placeholder: '<!--connectionstring:replace-->'
-          replacement: secrets.CONNECTION_STRING
-      - name: Tag Replacer Notion Auth
-        uses: AlexRogalskiy/github-action-tag-replacer@v2.0.1
-        with:
-          sourceData: ./CronJobsForHefesto/local.settings.json
-          placeholder: '<!--connectionstring:replace-->'
-          replacement: secrets.NOTION_AUTH_TOKEN
-      - name: Tag Replacer Notion DB
-        uses: AlexRogalskiy/github-action-tag-replacer@v2.0.1
-        with:
-          sourceData: ./CronJobsForHefesto/local.settings.json
-          placeholder: '<!--connectionstring:replace-->'
-          replacement: secrets.NOTION_DATABASE_ID    
+          input_file: ./CronJobsForHefesto/local.settings.json
+          fail_on_missing_env: true
 
     
   build:

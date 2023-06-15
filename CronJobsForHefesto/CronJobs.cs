@@ -18,15 +18,19 @@ namespace CronJobsForHefesto
         }
 
         [Function("ExtendsInstagramAcessKeyFor60Days")]
-        public void ExtendsInstagramAcessKeyFor60Days([TimerTrigger("0 */5 * * * *")] MyInfo myTimer)
+        public async Task ExtendsInstagramAcessKeyFor60DaysAsync([TimerTrigger("0 0 2 1,15 * *", RunOnStartup = true)] MyInfo myTimer)
         {
-            _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            _logger.LogInformation($"▶️ UploadPhotoFromNotionToStorageAccount function execution started at: {DateTime.Now}");
+
+            var service = new AccessTokenFunctions(_clientFactory);
+            await service.RefreshInstagramToken();
+
+            _logger.LogInformation($"✅ UploadPhotoFromNotionToStorageAccount function executed at: {DateTime.Now}");
         }
 
         [Function("UploadPhotoFromNotionToStorageAccount")]
         public async Task UploadPhotoFromNotionToStorageAccountAsync([TimerTrigger("0 15 2 1-31 * *", RunOnStartup = true)] MyInfo myTimer)
         {
-            _logger.LogInformation("-----------------------------------------------------");
             _logger.LogInformation($"▶️ UploadPhotoFromNotionToStorageAccount function execution started at: {DateTime.Now}");
 
             var service = new NotionToStorageAccount(_clientFactory);

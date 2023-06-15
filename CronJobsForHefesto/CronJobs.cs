@@ -17,12 +17,11 @@ namespace CronJobsForHefesto
             _clientFactory = clientFactory;
         }
 
-        //[Function("ExtendsInstagramAcessKeyFor60Days")]
-        //public void ExtendsInstagramAcessKeyFor60Days([TimerTrigger("0 */5 * * * *")] MyInfo myTimer)
-        //{
-        //    _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-        //    _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
-        //}
+        [Function("ExtendsInstagramAcessKeyFor60Days")]
+        public void ExtendsInstagramAcessKeyFor60Days([TimerTrigger("0 */5 * * * *")] MyInfo myTimer)
+        {
+            _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+        }
 
         [Function("UploadPhotoFromNotionToStorageAccount")]
         public async Task UploadPhotoFromNotionToStorageAccountAsync([TimerTrigger("0 15 2 1-31 * *", RunOnStartup = true)] MyInfo myTimer)

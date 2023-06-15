@@ -1,4 +1,5 @@
 ﻿using CronJobsForHefesto.Services;
+using System;
 
 namespace CronJobsForHefesto.Functions
 {
@@ -15,8 +16,15 @@ namespace CronJobsForHefesto.Functions
         public async Task ExcuteActionAsync()
         {
             var originalCovers = await _notionService.GetPageCoversAsync(false);
-            var newPathCovers = await _storageAccountService.UploadToStorageAccountAsync(originalCovers);
-            _notionService.UpdatePageCover(newPathCovers);
+            if (originalCovers.Count == 0)
+            {
+                Console.WriteLine("✅ No image was found to be replaced");
+                
+            }else
+            {
+                var newPathCovers = await _storageAccountService.UploadToStorageAccountAsync(originalCovers);
+                _notionService.UpdatePageCover(newPathCovers);
+            }
         }
     }
 }

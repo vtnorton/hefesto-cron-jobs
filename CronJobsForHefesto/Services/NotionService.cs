@@ -125,7 +125,7 @@ namespace CronJobsForHefesto.Services
                 Cover = cover
             };
             _notionClient.Pages.UpdateAsync(pageCover.PageId, toUpdate);
-            Console.WriteLine("Updated page: " + pageCover.PageId + " (" + pageCover.PageLink + ")");
+            Console.WriteLine("▶️ Updated page: " + pageCover.PageId + " (" + pageCover.PageLink + ")");
         }
     }
 }

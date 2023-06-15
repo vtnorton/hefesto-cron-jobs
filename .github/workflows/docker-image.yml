@@ -12,28 +12,20 @@ env:
   NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
 
 jobs:
-  enviroment:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Rename settings
-        run: mv ./CronJobsForHefesto/settings.json ./CronJobsForHefesto/local.settings.json
-      - name: replace-env
-        uses: nightstory/replace-env@v1
-        with:
-          input_file: ./Dockerfile
-          fail_on_missing_env: true
-
   build:
     runs-on: ubuntu-latest
-    needs: enviroment
     permissions:
       contents: read
       packages: write
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: replace-env
+        uses: nightstory/replace-env@v1
+        with:
+          input_file: ./Dockerfile
+          fail_on_missing_env: true
 
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1

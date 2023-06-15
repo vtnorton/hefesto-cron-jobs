@@ -1,12 +1,15 @@
 ﻿using CronJobsForHefesto.Models;
+using Microsoft.Extensions.Logging;
 using Notion.Client;
 
 namespace CronJobsForHefesto.Services
 {
     internal class NotionService
     {
+        private readonly ILogger _logger;
         private NotionClient _notionClient;
-        public NotionService() {
+        public NotionService(ILogger logger) {
+            _logger = logger;
             _notionClient = NotionClientFactory.Create(new ClientOptions
             {
                 AuthToken = Environment.GetEnvironmentVariable("NOTION_AUTH_TOKEN")
@@ -125,7 +128,7 @@ namespace CronJobsForHefesto.Services
                 Cover = cover
             };
             _notionClient.Pages.UpdateAsync(pageCover.PageId, toUpdate);
-            Console.WriteLine("▶️ Updated page: " + pageCover.PageId + " (" + pageCover.PageLink + ")");
+            _logger.LogInformation("▶️ Updated page: " + pageCover.PageId + " (" + pageCover.PageLink + ")");
         }
     }
 }

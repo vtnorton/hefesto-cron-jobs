@@ -22,7 +22,7 @@ namespace CronJobsForHefesto
         {
             _logger.LogInformation($"▶️ UploadPhotoFromNotionToStorageAccount function execution started at: {DateTime.Now}");
 
-            var service = new AccessTokenFunctions(_clientFactory);
+            var service = new AccessTokenFunctions(_clientFactory, _logger);
             await service.RefreshInstagramToken();
 
             _logger.LogInformation($"✅ UploadPhotoFromNotionToStorageAccount function executed at: {DateTime.Now}");
@@ -33,7 +33,7 @@ namespace CronJobsForHefesto
         {
             _logger.LogInformation($"▶️ UploadPhotoFromNotionToStorageAccount function execution started at: {DateTime.Now}");
 
-            var service = new NotionToStorageAccount(_clientFactory);
+            var service = new NotionToStorageAccount(_clientFactory, _logger);
             await service.ExcuteActionAsync();
 
             _logger.LogInformation($"✅ UploadPhotoFromNotionToStorageAccount function executed at: {DateTime.Now}");

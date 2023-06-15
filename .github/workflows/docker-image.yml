@@ -22,7 +22,7 @@ jobs:
       - name: replace-env
         uses: nightstory/replace-env@v1
         with:
-          input_file: ./CronJobsForHefesto/local.settings.json
+          input_file: ./Dockerfile
           fail_on_missing_env: true
 
   build:

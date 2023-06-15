@@ -1,6 +1,12 @@
 FROM mcr.microsoft.com/azure-functions/dotnet-isolated:4-dotnet-isolated7.0 AS base
+LABEL maintainer="vítor norton"
+LABEL description="hefesto-cron-jobs"
 WORKDIR /home/site/wwwroot
 EXPOSE 80
+
+ENV CONNECTION_STRING ${CONNECTION_STRING}
+ENV NOTION_AUTH_TOKEN ${NOTION_AUTH_TOKEN}
+ENV NOTION_DATABASE_ID ${NOTION_DATABASE_ID}
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0 as runtime6.0
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build

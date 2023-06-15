@@ -17,14 +17,6 @@ namespace CronJobsForHefesto.Functions
             var originalCovers = await _notionService.GetPageCoversAsync(false);
             var newPathCovers = await _storageAccountService.UploadToStorageAccountAsync(originalCovers);
             _notionService.UpdatePageCover(newPathCovers);
-            /*
-             * 1 - Garantir que está funcionando com o Docker
-             * 2 - Proteger as secrets
-             * 3 - Notificar execução ou falha
-             * 4 - Instagram Service
-             * 5 - Manifesto para Hefesto
-             * 6 - Ter rodando no Hefesto
-             */
         }
     }
 }

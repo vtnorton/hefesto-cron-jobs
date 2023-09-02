@@ -7,6 +7,7 @@ namespace CronJobsForHefesto.Functions
     {
         private readonly ILogger _logger;
         private NotionService _notionService;
+        private MicrosoftGraphServices _graphServices;
         private readonly IHttpClientFactory _clientFactory;
 
         public DiscordToCalendarFunctions(IHttpClientFactory clientFactory, ILogger logger)
@@ -14,11 +15,14 @@ namespace CronJobsForHefesto.Functions
             _logger = logger;
             _notionService = new NotionService(_logger);
             _clientFactory = clientFactory;
+            _graphServices = new MicrosoftGraphServices();
         }
 
         public async Task SaveNotionEventsToDiscordAndCalendar()
         {
-            var events = await _notionService.GetEventsAsync();
+            _graphServices.GetCalendarAsync();
+
+            // var events = await _notionService.GetEventsAsync();
 
 
             if (true)

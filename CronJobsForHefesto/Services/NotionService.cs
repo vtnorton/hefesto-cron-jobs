@@ -23,6 +23,7 @@ namespace CronJobsForHefesto.Services
         public async Task<List<Schedule>> GetEventsAsync()
         {
             var eventsList = new List<Schedule>();
+
             var selectEventFilter = new MultiSelectFilter("Type", contains: "Evento");
 
             var selectEnjoyFilter = new SelectFilter("Status-evento", equal: "Enjoy");

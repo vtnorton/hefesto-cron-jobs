@@ -25,9 +25,9 @@ namespace CronJobsForHefesto.Services
             var eventsList = new List<Schedule>();
             var selectEventFilter = new MultiSelectFilter("Type", contains: "Evento");
 
-            var selectEnjoyFilter = new SelectFilter("Status-evento", equal: "Enjoy");
-            var selectMarketingFilter = new SelectFilter("Status-evento", equal: "Criação/Marketing/Etc...");
-            var selectTwitchLivesFilter = new SelectFilter("Status-evento", equal: "Twitch-lives");
+            var selectEnjoyFilter = new StatusFilter("Status-evento", equal: "Enjoy");
+            var selectMarketingFilter = new StatusFilter("Status-evento", equal: "Criação/Marketing/Etc...");
+            var selectTwitchLivesFilter = new StatusFilter("Status-evento", equal: "Twitch-lives");
 
             var queryEventInMarketingParams = new DatabasesQueryParameters
             {
@@ -108,9 +108,9 @@ namespace CronJobsForHefesto.Services
             var selectPostFilter = new MultiSelectFilter("Type", contains: "Post");
             var selectChangelogFilter = new MultiSelectFilter("Type", contains: "Changelog");
 
-            var selectQueryPoster = new SelectFilter("Status-post", equal: "Query");
-            var selectFollowUpPoster = new SelectFilter("Status-post", equal: "Follow-up");
-            var selectPublishedPoster = new SelectFilter("Status-post", equal: "Published");
+            var selectQueryPoster = new StatusFilter("Status-post", equal: "Query");
+            var selectFollowUpPoster = new StatusFilter("Status-post", equal: "Follow-up");
+            var selectPublishedPoster = new StatusFilter("Status-post", equal: "Published");
             var statusFilter = new List<Filter> { selectQueryPoster, selectFollowUpPoster, selectPublishedPoster };
 
             var queryPostParams = new DatabasesQueryParameters

@@ -1,4 +1,6 @@
-﻿using CronJobsForHefesto.Models;
+﻿using CronJobsForHefesto.Enums;
+using CronJobsForHefesto.Models;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Notion.Client;
 
@@ -8,100 +10,21 @@ namespace CronJobsForHefesto.Services
     {
         private readonly ILogger _logger;
         private NotionClient _notionClient;
-        private readonly string _databaseId;
+        private readonly string _devRelDBId;
+        private readonly string _talksDBId;
 
         public NotionService(ILogger logger)
         {
             _logger = logger;
-            _databaseId = Environment.GetEnvironmentVariable("NOTION_DATABASE_ID");
+            _devRelDBId = Environment.GetEnvironmentVariable("NOTION_DATABASE_ID");
+            _talksDBId = Environment.GetEnvironmentVariable("NOTION_TALKS_DB_ID");
             _notionClient = NotionClientFactory.Create(new ClientOptions
             {
                 AuthToken = Environment.GetEnvironmentVariable("NOTION_AUTH_TOKEN")
             });
         }
 
-        public async Task<List<Schedule>> GetEventsAsync()
-        {
-            var eventsList = new List<Schedule>();
-            var selectEventFilter = new MultiSelectFilter("Type", contains: "Evento");
-
-            var selectEnjoyFilter = new StatusFilter("Status-evento", equal: "Enjoy");
-            var selectMarketingFilter = new StatusFilter("Status-evento", equal: "Criação/Marketing/Etc...");
-            var selectTwitchLivesFilter = new StatusFilter("Status-evento", equal: "Twitch-lives");
-
-            var queryEventInMarketingParams = new DatabasesQueryParameters
-            {
-                Filter = new CompoundFilter(
-                    and: new List<Filter> { selectEventFilter, selectMarketingFilter }
-                ),
-                PageSize = 50
-            };
-            var queryEventInEnjoyParams = new DatabasesQueryParameters
-            {
-                Filter = new CompoundFilter(
-                    and: new List<Filter> { selectEventFilter, selectEnjoyFilter }
-                ),
-                PageSize = 50
-            };
-            var queryEventInTwitchParams = new DatabasesQueryParameters
-            {
-                Filter = new CompoundFilter(
-                    and: new List<Filter> { selectEventFilter, selectTwitchLivesFilter }
-                ),
-                PageSize = 50
-            };
-
-            var eventsInMarketing = await _notionClient.Databases.QueryAsync(_databaseId, queryEventInMarketingParams);
-            var eventsInEnjoy = await _notionClient.Databases.QueryAsync(_databaseId, queryEventInEnjoyParams);
-            var eventsInTwitch = await _notionClient.Databases.QueryAsync(_databaseId, queryEventInTwitchParams);
-
-            List<Page> events = new List<Page>();
-            events.AddRange(eventsInMarketing.Results.ToList());
-            events.AddRange(eventsInEnjoy.Results.ToList());
-            events.AddRange(eventsInTwitch.Results.ToList());
-
-            foreach (dynamic item in events)
-            {
-                try
-                {
-                    string? description = "Evento privado";
-                    string? link = "Evento privado";
-                    string? coverUrl = string.Empty;
-
-                    var types = item.Properties["Type"]?.MultiSelect as List<SelectOption>;
-                    bool isPrivate = types.Any(x => x.Name == "Private");
-
-                    if (!isPrivate)
-                    {
-                        description = item.Properties["Observação"]?.RichText[0]?.PlainText;
-                        link = item.Properties["Link"]?.Url;
-                        coverUrl = GetCoverURL(item);
-                    }
-
-                    var startDate = item.Properties["Date"].Date?.Start;
-                    var endDate = item.Properties["Date"].Date?.End;
-
-                    eventsList.Add(new Schedule()
-                    {
-                        Name = item.Properties["Name"].Title[0].PlainText,
-                        Description = description,
-                        Link = link,
-                        IsPrivate = isPrivate,
-                        StartDate = DateTime.Parse(startDate),
-                        EndDate = DateTime.Parse(endDate),
-                        CoverUrl = coverUrl,
-                    });
-                }
-                catch (Exception)
-                {
-                }
-
-            }
-
-            return eventsList;
-        }
-
-        public async Task<List<PageCover>> GetPageCoversAsync(bool showStorageCovers = true)
+        public async Task<List<PageCover>> GetPostCoversAsync(bool showStorageCovers = true)
         {
             var pagesCovers = new List<PageCover>();
 
@@ -140,10 +63,49 @@ namespace CronJobsForHefesto.Services
                 } }
             };
 
-            var posts = await _notionClient.Databases.QueryAsync(_databaseId, queryPostParams);
-            var changelogs = await _notionClient.Databases.QueryAsync(_databaseId, queryChangelogParams);
+            var posts = await GetCoversOfPagesAsync(NotionDatabase.DevRel,queryPostParams, showStorageCovers);
+            var changelogs = await GetCoversOfPagesAsync(NotionDatabase.DevRel, queryChangelogParams, showStorageCovers);
 
-            foreach (var item in posts.Results)
+            pagesCovers.AddRange(changelogs);
+            pagesCovers.AddRange(posts);
+
+            return pagesCovers;
+        }
+
+        public async Task<List<PageCover>> GetTalksCoversAsync(bool showStorageCovers = true)
+        {
+            var selectQueryPoster = new StatusFilter("Status", equal: "Apresentada");
+            var selectFollowUpPoster = new StatusFilter("Status", equal: "Call 4 Pappers");
+            var selectPublishedPoster = new StatusFilter("Status", equal: "Planos de fazer");
+            var statusFilter = new List<Filter> { selectQueryPoster, selectFollowUpPoster, selectPublishedPoster };
+
+            var queryTalksParams = new DatabasesQueryParameters
+            {
+                Filter = new CompoundFilter(
+                    or: statusFilter
+                ),
+                PageSize = 250,
+            };
+
+            var talks = await GetCoversOfPagesAsync(NotionDatabase.Talks, queryTalksParams, showStorageCovers);
+
+            return talks;
+        }
+
+        private async Task<List<PageCover>> GetCoversOfPagesAsync(NotionDatabase database, DatabasesQueryParameters queryParameters, bool showStorageCovers = true)
+        {
+            var pagesCovers = new List<PageCover>();
+            string databaseId = string.Empty;
+
+            if (database == NotionDatabase.Talks)
+                databaseId = _talksDBId;
+
+            if (database == NotionDatabase.DevRel)
+                databaseId = _devRelDBId;
+
+            var pages = await _notionClient.Databases.QueryAsync(databaseId, queryParameters);
+
+            foreach (var item in pages.Results)
             {
                 if (item.Cover != null)
                 {
@@ -151,22 +113,8 @@ namespace CronJobsForHefesto.Services
                     {
                         PageId = item.Id,
                         PageLink = item.Url,
-                        PhotoURL = GetCoverURL(item)
-                    });
-                    Console.WriteLine("Imported Notion page: " + item.Id);
-                }
-
-            }
-
-            foreach (var item in changelogs.Results)
-            {
-                if (item.Cover != null)
-                {
-                    pagesCovers.Add(new PageCover()
-                    {
-                        PageId = item.Id,
-                        PageLink = item.Url,
-                        PhotoURL = GetCoverURL(item)
+                        PhotoURL = GetCoverURL(item),
+                        Database = database,
                     });
                     Console.WriteLine("Imported Notion page: " + item.Id);
                 }
